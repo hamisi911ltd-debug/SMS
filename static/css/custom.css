@@ -1,4 +1,4 @@
-/* Custom styles for Kenyan Schools System */
+/* Custom styles for Glotech High School System */
 
 /* Typography */
 body {
@@ -17,7 +17,8 @@ body {
     font-weight: 500;
 }
 
-.form-control {
+.form-control,
+.glass-input {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -29,13 +30,15 @@ body {
     transition: all 0.3s ease;
 }
 
-.form-control:focus {
+.form-control:focus,
+.glass-input:focus {
     outline: none;
     border-color: rgba(255, 255, 255, 0.5);
     background: rgba(255, 255, 255, 0.15);
 }
 
-.form-control::placeholder {
+.form-control::placeholder,
+.glass-input::placeholder {
     color: rgba(255, 255, 255, 0.5);
 }
 

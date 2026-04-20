@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Login - Kenyan Schools System{% endblock %}
+{% block title %}Login - Glotech High School System{% endblock %}
 
 {% block content %}
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
         <div class="text-center">
             <h2 class="mt-6 text-4xl font-extrabold text-white">
-                Kenyan Schools System
+                Glotech High School System
             </h2>
             <p class="mt-2 text-sm text-white/80">
                 Sign in to access your account
@@ -24,7 +24,13 @@
                         <label for="{{ form.username.id_for_label }}" class="form-label">
                             Username or Email
                         </label>
-                        {{ form.username }}
+                        <input type="text" 
+                               name="username" 
+                               id="{{ form.username.id_for_label }}"
+                               class="glass-input w-full"
+                               placeholder="Enter username or email"
+                               autocomplete="username"
+                               required>
                         {% if form.username.errors %}
                         <ul class="errorlist">
                             {% for error in form.username.errors %}
@@ -38,7 +44,13 @@
                         <label for="{{ form.password.id_for_label }}" class="form-label">
                             Password
                         </label>
-                        {{ form.password }}
+                        <input type="password" 
+                               name="password" 
+                               id="{{ form.password.id_for_label }}"
+                               class="glass-input w-full"
+                               placeholder="Enter your password"
+                               autocomplete="current-password"
+                               required>
                         {% if form.password.errors %}
                         <ul class="errorlist">
                             {% for error in form.password.errors %}

@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
         return self.create_user(username, email, password, **extra_fields)
 
 class User(AbstractUser):
-    """Custom User model for Kenyan Schools System"""
+    """Custom User model for Glotech High School System"""
     
     ROLE_CHOICES = [
         ('admin', 'Administrator'),

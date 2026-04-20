@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Register - Kenyan Schools System{% endblock %}
+{% block title %}Register - Glotech High School System{% endblock %}
 
 {% block content %}
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -167,6 +167,7 @@
                             <input type="password" name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}" 
                                    class="glass-input pl-10" 
                                    placeholder="••••••••"
+                                   autocomplete="new-password"
                                    required>
                             <button type="button" onclick="togglePassword('{{ form.password1.id_for_label }}')" 
                                     class="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -189,6 +190,7 @@
                             <input type="password" name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}" 
                                    class="glass-input pl-10" 
                                    placeholder="••••••••"
+                                   autocomplete="new-password"
                                    required>
                             <button type="button" onclick="togglePassword('{{ form.password2.id_for_label }}')" 
                                     class="absolute inset-y-0 right-0 pr-3 flex items-center">

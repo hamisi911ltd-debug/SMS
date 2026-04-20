@@ -19,15 +19,15 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)  # Default to False for production
 
-# Railway provides the PORT environment variable
+# Railway/Vercel provides the PORT environment variable
 PORT = config('PORT', default='8000')
 
-# ALLOWED_HOSTS configuration for Railway
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.up.railway.app').split(',')
+# ALLOWED_HOSTS configuration for Railway and Vercel
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.up.railway.app,.vercel.app').split(',')
 
-# CSRF Trusted Origins for Railway
+# CSRF Trusted Origins for Railway and Vercel
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', 
-                              default='http://localhost:8000,http://127.0.0.1:8000,https://*.up.railway.app').split(',')
+                              default='http://localhost:8000,http://127.0.0.1:8000,https://*.up.railway.app,https://*.vercel.app').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -221,25 +221,23 @@ GENDER_CHOICES = [
 # =============================================================================
 
 JAZZMIN_SETTINGS = {
-    "site_title": "Kenyan Schools System Admin",
-    "site_header": "Kenyan Schools System",
-    "site_brand": "KSS Admin",
+    "site_title": "Glotech High School Admin",
+    "site_header": "Glotech High School System",
+    "site_brand": "Glotech Admin",
     "site_logo": "images/logo.png",
     "site_logo_classes": "img-circle",
-    "welcome_sign": "Welcome to the Kenyan Schools System Administration",
-    "copyright": "Kenyan Schools System Ltd",
+    "welcome_sign": "Welcome to Glotech High School Administration",
+    "copyright": "Glotech High School",
     "search_model": ["accounts.User", "students.Student", "teachers.Teacher"],
     "user_avatar": None,
     
     "topmenu_links": [
         {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "Support", "url": "https://github.com/eugenconsultancy/KENYAN-SCHOOLS-ADMINISTRATION-SYSTEM/issues", "new_window": True},
         {"model": "auth.User"},
         {"app": "accounts"},
     ],
     
     "usermenu_links": [
-        {"name": "Support", "url": "https://github.com/eugenconsultancy/KENYAN-SCHOOLS-ADMINISTRATION-SYSTEM/issues", "new_window": True},
         {"model": "auth.user"}
     ],
     
@@ -553,17 +551,18 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
 
 # =============================================================================
-# RAILWAY SPECIFIC SETTINGS
+# RAILWAY/VERCEL SPECIFIC SETTINGS
 # =============================================================================
 
 # Check if running on Railway (presence of RAILWAY_ENVIRONMENT variable)
 IS_RAILWAY = config('RAILWAY_ENVIRONMENT', default=None) is not None
+IS_VERCEL = config('VERCEL', default=None) is not None
 
-if IS_RAILWAY:
+if IS_RAILWAY or IS_VERCEL:
     # Ensure static files are collected
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     
-    # Use Railway's Redis for channels
+    # Use Redis for channels if available
     if REDIS_URL:
         CHANNEL_LAYERS = {
             'default': {
@@ -573,6 +572,13 @@ if IS_RAILWAY:
                     "capacity": 1500,
                     "expiry": 60,
                 },
+            },
+        }
+    else:
+        # Use in-memory for Vercel (no persistent connections)
+        CHANNEL_LAYERS = {
+            'default': {
+                'BACKEND': 'channels.layers.InMemoryChannelLayer',
             },
         }
 

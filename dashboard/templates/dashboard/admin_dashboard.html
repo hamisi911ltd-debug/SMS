@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Admin Dashboard - Kenyan Schools System{% endblock %}
+{% block title %}Admin Dashboard - Glotech High School System{% endblock %}
 
 {% block page_title %}Admin Dashboard{% endblock %}
 
@@ -17,46 +17,57 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="glass-card stat-card">
             <div class="stat-icon">
-                <i class="fas fa-users text-2xl text-white"></i>
+                <i class="fas fa-users text-xl text-white"></i>
             </div>
-            <div class="stat-value">{{ total_students }}</div>
-            <div class="stat-label">Total Students</div>
-            <div class="stat-change positive">
-                <i class="fas fa-arrow-up mr-1"></i> {{ active_students }} Active
-            </div>
-        </div>
-        
-        <div class="glass-card stat-card">
-            <div class="stat-icon">
-                <i class="fas fa-chalkboard-teacher text-2xl text-white"></i>
-            </div>
-            <div class="stat-value">{{ total_teachers }}</div>
-            <div class="stat-label">Total Teachers</div>
-            <div class="stat-change positive">
-                <i class="fas fa-check-circle mr-1"></i> {{ active_teachers }} Active
+            <div>
+                <div class="stat-value">{{ total_students|default:"0" }}</div>
+                <div class="stat-label">Total Students</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-check-circle"></i>
+                    {{ active_students|default:"0" }} Active
+                </div>
             </div>
         </div>
         
         <div class="glass-card stat-card">
             <div class="stat-icon">
-                <i class="fas fa-money-bill-wave text-2xl text-white"></i>
+                <i class="fas fa-chalkboard-teacher text-xl text-white"></i>
             </div>
-            <div class="stat-value">KSh {{ total_collected|floatformat:0 }}</div>
-            <div class="stat-label">Fees Collected</div>
-            <div class="stat-change {% if outstanding > 0 %}negative{% else %}positive{% endif %}">
-                <i class="fas {% if outstanding > 0 %}fa-arrow-down{% else %}fa-arrow-up{% endif %} mr-1"></i>
-                KSh {{ outstanding|floatformat:0 }} Outstanding
+            <div>
+                <div class="stat-value">{{ total_teachers|default:"0" }}</div>
+                <div class="stat-label">Total Teachers</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-check-circle"></i>
+                    {{ active_teachers|default:"0" }} Active
+                </div>
             </div>
         </div>
         
         <div class="glass-card stat-card">
             <div class="stat-icon">
-                <i class="fas fa-calendar-check text-2xl text-white"></i>
+                <i class="fas fa-money-bill-wave text-xl text-white"></i>
             </div>
-            <div class="stat-value">{{ today_attendance.present }}/{{ today_attendance.total }}</div>
-            <div class="stat-label">Today's Attendance</div>
-            <div class="stat-change">
-                <i class="fas fa-clock mr-1"></i> {{ today_attendance.late }} Late
+            <div>
+                <div class="stat-value">KSh {{ total_collected|default:"0"|floatformat:0 }}</div>
+                <div class="stat-label">Fees Collected</div>
+                <div class="stat-change {% if outstanding > 0 %}negative{% else %}positive{% endif %}">
+                    <i class="fas {% if outstanding > 0 %}fa-exclamation-triangle{% else %}fa-check-circle{% endif %}"></i>
+                    KSh {{ outstanding|default:"0"|floatformat:0 }} Outstanding
+                </div>
+            </div>
+        </div>
+        
+        <div class="glass-card stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-calendar-check text-xl text-white"></i>
+            </div>
+            <div>
+                <div class="stat-value">{{ today_attendance.present|default:"0" }}/{{ today_attendance.total|default:"0" }}</div>
+                <div class="stat-label">Today's Attendance</div>
+                <div class="stat-change">
+                    <i class="fas fa-clock"></i>
+                    {{ today_attendance.late|default:"0" }} Late
+                </div>
             </div>
         </div>
     </div>

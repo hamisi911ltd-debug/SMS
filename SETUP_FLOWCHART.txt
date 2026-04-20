@@ -1,0 +1,255 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  KENYAN SCHOOLS SYSTEM - SETUP FLOWCHART                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+                              ┌─────────────────┐
+                              │   START HERE    │
+                              └────────┬────────┘
+                                       │
+                                       ▼
+                        ┌──────────────────────────┐
+                        │  Is Python Installed?    │
+                        │  Run: python --version   │
+                        └──────────┬───────────────┘
+                                   │
+                    ┌──────────────┴──────────────┐
+                    │                             │
+                   NO                            YES
+                    │                             │
+                    ▼                             ▼
+        ┌───────────────────────┐    ┌──────────────────────┐
+        │  INSTALL PYTHON 3.11+ │    │  Proceed to Setup    │
+        │                       │    └──────────┬───────────┘
+        │  1. Download from     │               │
+        │     python.org        │               │
+        │  2. Check "Add PATH"  │               │
+        │  3. Install           │               │
+        │  4. Restart Terminal  │               │
+        └───────────┬───────────┘               │
+                    │                           │
+                    └───────────┬───────────────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  RUN SETUP SCRIPT     │
+                    │                       │
+                    │  PowerShell:          │
+                    │    .\setup.ps1        │
+                    │                       │
+                    │  OR Batch:            │
+                    │    setup.bat          │
+                    └───────────┬───────────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  AUTOMATED STEPS:     │
+                    │                       │
+                    │  ✓ Create venv        │
+                    │  ✓ Activate venv      │
+                    │  ✓ Upgrade pip        │
+                    │  ✓ Install packages   │
+                    │  ✓ Create .env        │
+                    │  ✓ Run migrations     │
+                    │  ✓ Collect static     │
+                    └───────────┬───────────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  CREATE ADMIN USER    │
+                    │                       │
+                    │  Option 1:            │
+                    │  Let script prompt    │
+                    │                       │
+                    │  Option 2:            │
+                    │  Use existing:        │
+                    │  eugen / 38624586     │
+                    └───────────┬───────────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  POPULATE DATA?       │
+                    │                       │
+                    │  YES: Sample data     │
+                    │  NO: Empty database   │
+                    └───────────┬───────────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  SETUP COMPLETE! ✅   │
+                    └───────────┬───────────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  START DEVELOPMENT    │
+                    │                       │
+                    │  1. Activate venv:    │
+                    │     .\venv\Scripts\   │
+                    │     activate          │
+                    │                       │
+                    │  2. Start server:     │
+                    │     python manage.py  │
+                    │     runserver         │
+                    │                       │
+                    │  3. Open browser:     │
+                    │     http://127.0.0.1  │
+                    │     :8000             │
+                    └───────────┬───────────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  TEST SYSTEM          │
+                    │                       │
+                    │  □ Admin Panel        │
+                    │  □ Teacher Login      │
+                    │  □ Student Login      │
+                    │  □ All Modules        │
+                    └───────────┬───────────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  SUCCESS! 🎉          │
+                    │                       │
+                    │  System is ready      │
+                    │  for development      │
+                    └───────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                            TROUBLESHOOTING PATHS                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+    ERROR: Python not found
+            │
+            ▼
+    ┌──────────────────────┐
+    │ 1. Reinstall Python  │
+    │ 2. Check PATH box    │
+    │ 3. Restart computer  │
+    └──────────────────────┘
+
+    ERROR: venv activation fails
+            │
+            ▼
+    ┌──────────────────────────────┐
+    │ Set-ExecutionPolicy          │
+    │ -ExecutionPolicy             │
+    │ RemoteSigned                 │
+    │ -Scope CurrentUser           │
+    └──────────────────────────────┘
+
+    ERROR: pip install fails
+            │
+            ▼
+    ┌──────────────────────────────┐
+    │ python -m pip install        │
+    │ --upgrade pip                │
+    │                              │
+    │ pip install -r               │
+    │ requirements.txt             │
+    │ --no-cache-dir               │
+    └──────────────────────────────┘
+
+    ERROR: Migration fails
+            │
+            ▼
+    ┌──────────────────────────────┐
+    │ Delete db.sqlite3            │
+    │ python manage.py migrate     │
+    │ --run-syncdb                 │
+    └──────────────────────────────┘
+
+    ERROR: Port in use
+            │
+            ▼
+    ┌──────────────────────────────┐
+    │ python manage.py runserver   │
+    │ 8080                         │
+    └──────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              FILE STRUCTURE                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+    kenyan_schools_system/
+    │
+    ├── 📄 START_HERE.md              ← Read this first!
+    ├── 📄 INSTALLATION_CHECKLIST.md  ← Follow step by step
+    ├── 📄 SETUP_GUIDE.md             ← Detailed instructions
+    ├── 📄 QUICK_START.md             ← Daily commands
+    ├── 📄 README.md                  ← System overview
+    │
+    ├── 🔧 setup.ps1                  ← Run this (PowerShell)
+    ├── 🔧 setup.bat                  ← Or this (Batch)
+    ├── 🔧 manage.py                  ← Django management
+    │
+    ├── ⚙️ .env.example               ← Configuration template
+    ├── ⚙️ requirements.txt           ← Python packages
+    ├── ⚙️ runtime.txt                ← Python version
+    │
+    ├── 📁 venv/                      ← Virtual environment (created)
+    ├── 📁 static/                    ← CSS, JS, images
+    ├── 📁 templates/                 ← HTML templates
+    ├── 📁 media/                     ← Uploaded files
+    │
+    ├── 📁 accounts/                  ← User management
+    ├── 📁 students/                  ← Student module
+    ├── 📁 teachers/                  ← Teacher module
+    ├── 📁 academics/                 ← Academic module
+    ├── 📁 finance/                   ← Finance module
+    ├── 📁 attendance/                ← Attendance module
+    ├── 📁 messaging/                 ← Messaging module
+    ├── 📁 dashboard/                 ← Dashboards
+    ├── 📁 reports/                   ← Reports module
+    └── 📁 config/                    ← Django settings
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           ESTIMATED TIME                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+    Python Installation:        5 minutes
+    Setup Script Execution:    10 minutes
+    Admin User Creation:        2 minutes
+    Sample Data Population:     3 minutes
+    Testing:                    5 minutes
+    ─────────────────────────────────────
+    TOTAL:                     25 minutes
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         WHAT YOU'LL HAVE                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+    ✅ Python 3.11+ installed
+    ✅ Virtual environment configured
+    ✅ All dependencies installed (50+ packages)
+    ✅ Database created and migrated
+    ✅ Static files collected
+    ✅ Admin user created
+    ✅ Sample data populated (optional)
+    ✅ Development server ready
+    ✅ All modules functional
+    ✅ Ready for customization
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                            NEXT STEPS                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+    After successful setup:
+
+    1. 🔐 Login to admin panel
+    2. 📚 Explore the modules
+    3. 👥 Add your school's data
+    4. 🎨 Customize as needed
+    5. 🧪 Test all features
+    6. 🚀 Deploy to production (Railway)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                        🎓 KENYAN SCHOOLS SYSTEM
+                    Ready to transform your school!
+
+═══════════════════════════════════════════════════════════════════════════════

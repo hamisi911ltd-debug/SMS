@@ -6,7 +6,7 @@ from accounts.models import User
 import datetime
 
 class Teacher(models.Model):
-    """Teacher model for Kenyan Schools System"""
+    """Teacher model for Glotech High School System"""
     
     EMPLOYMENT_TYPES = [
         ('permanent', 'Permanent'),

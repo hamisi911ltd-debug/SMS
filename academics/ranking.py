@@ -1,5 +1,5 @@
 """
-Ranking engine for Kenyan Schools System
+Ranking engine for Glotech High School System
 Handles student ranking calculations
 """
 

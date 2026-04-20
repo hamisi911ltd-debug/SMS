@@ -4,7 +4,7 @@ from django.utils import timezone
 def site_settings(request):
     """Context processor for site-wide settings"""
     return {
-        'site_name': 'Kenyan Schools System',
+        'site_name': 'Glotech High School System',
         'current_year': timezone.now().year,
         'current_term': 'Term 1',
         'academic_year': '2024',

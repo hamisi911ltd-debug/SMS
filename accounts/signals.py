@@ -11,7 +11,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         # Send welcome notification
         Notification.objects.create(
             recipient=instance,
-            title='Welcome to Kenyan Schools System',
+            title='Welcome to Glotech High School System',
             message=f'Welcome {instance.get_full_name() or instance.username}! We\'re glad to have you on board.',
             notification_type='success'
         )

@@ -28,7 +28,7 @@ class AcademicYear(models.Model):
         super().save(*args, **kwargs)
 
 class Term(models.Model):
-    """Term model for Kenyan schools (3 terms per year)"""
+    """Term model for Glotech High School (3 terms per year)"""
     
     TERM_CHOICES = [
         (1, 'Term 1'),

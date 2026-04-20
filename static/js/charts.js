@@ -1,5 +1,5 @@
 /**
- * Charts.js - Chart configurations for Kenyan Schools System
+ * Charts.js - Chart configurations for Glotech High School System
  * Handles all Chart.js initializations and configurations
  */
 
