@@ -10,6 +10,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Node modules
+node_modules/
+package-lock.json
+
 # Database - Comment out if using SQLite on Railway with volume
 # *.sqlite3
 # *.db
