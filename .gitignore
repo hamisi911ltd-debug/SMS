@@ -14,17 +14,20 @@ venv.bak/
 node_modules/
 package-lock.json
 
-# Database - Comment out if using SQLite on Railway with volume
-# *.sqlite3
-# *.db
-# db.sqlite3
+# Database - Contains sensitive data
+*.sqlite3
+*.db
+db.sqlite3
 
 # Media files
 /media/
 /staticfiles/
 
-# Environment variables
+# Environment variables - NEVER commit these!
 .env
+.env.local
+.env.production
+*.env
 
 # IDE
 .vscode/
@@ -36,6 +39,8 @@ package-lock.json
 # Django
 *.log
 local_settings.py
+LOGIN_CREDENTIALS.txt
+*.txt
 
 # Coverage
 htmlcov/
