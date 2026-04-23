@@ -584,7 +584,8 @@ class GlotechApp {
             }
         };
 
-        if (token) {
+        // Only add auth header if we have a token AND it's not a login/register request
+        if (token && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/register')) {
             config.headers.Authorization = `Bearer ${token}`;
         }
 
@@ -596,8 +597,8 @@ class GlotechApp {
             const response = await fetch(`${this.apiBase}${endpoint}`, config);
             
             // Handle different response types
-            if (response.status === 401) {
-                // Unauthorized - clear token and show login
+            if (response.status === 401 && !endpoint.includes('/auth/login')) {
+                // Unauthorized - clear token and show login (but not for login attempts)
                 localStorage.removeItem('token');
                 this.currentUser = null;
                 this.showLogin();
@@ -609,7 +610,15 @@ class GlotechApp {
             }
             
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                const errorText = await response.text();
+                let errorMessage;
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.message || `HTTP ${response.status}: ${response.statusText}`;
+                } catch {
+                    errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
             }
             
             const result = await response.json();

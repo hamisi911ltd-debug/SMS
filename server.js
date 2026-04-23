@@ -90,6 +90,7 @@ const setupRoutes = () => {
 
 if (mongoUri) {
   // Only try to connect if MongoDB URI is provided
+  console.log('🔗 Attempting MongoDB connection...');
   mongoose.connect(mongoUri)
   .then(async () => {
     console.log('✅ Connected to MongoDB');
