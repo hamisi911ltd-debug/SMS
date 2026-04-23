@@ -134,4 +134,29 @@ router.get('/users', auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/auth/debug
+// @desc    Debug endpoint to check authentication mode
+// @access  Public
+router.get('/debug', async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      mode: 'demo',
+      message: 'Demo authentication is active',
+      availableUsers: Object.keys(demoUsers),
+      sampleCredentials: {
+        admin: 'admin/admin123',
+        teacher: 'john.teacher/teacher123',
+        student: 'jane.student/student123'
+      }
+    });
+  } catch (error) {
+    console.error('Debug endpoint error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
+
 module.exports = router;

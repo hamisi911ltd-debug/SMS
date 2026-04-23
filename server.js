@@ -66,7 +66,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database connection
 const mongoUri = process.env.MONGODB_URI;
-let isDemoMode = !mongoUri; // Start in demo mode if no MongoDB URI provided
+let isDemoMode = !mongoUri || mongoUri === '' || mongoUri === 'undefined'; // Start in demo mode if no valid MongoDB URI
+
+console.log('🔍 Environment check:');
+console.log('  MONGODB_URI:', mongoUri ? 'SET' : 'NOT SET');
+console.log('  NODE_ENV:', process.env.NODE_ENV || 'NOT SET');
+console.log('  Demo Mode:', isDemoMode ? 'ENABLED' : 'DISABLED');
 
 const setupRoutes = () => {
   // Routes - conditionally use demo routes if no database
@@ -88,8 +93,8 @@ const setupRoutes = () => {
   app.use('/api/reports', require('./routes/reports'));
 };
 
-if (mongoUri) {
-  // Only try to connect if MongoDB URI is provided
+if (mongoUri && mongoUri !== '' && mongoUri !== 'undefined') {
+  // Only try to connect if MongoDB URI is provided and valid
   console.log('🔗 Attempting MongoDB connection...');
   mongoose.connect(mongoUri)
   .then(async () => {
@@ -118,7 +123,7 @@ if (mongoUri) {
     setupRoutes();
   });
 } else {
-  console.log('⚠️  No MONGODB_URI provided - starting in DEMO MODE');
+  console.log('⚠️  No valid MONGODB_URI provided - starting in DEMO MODE');
   console.log('📖 See DEPLOYMENT_GUIDE.md for database setup instructions.');
   console.log('🎭 Demo credentials: admin/admin123, john.teacher/teacher123, jane.student/student123');
   setupRoutes();
