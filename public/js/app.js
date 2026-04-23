@@ -34,23 +34,51 @@ class GlotechApp {
     }
 
     initSocket() {
-        this.socket = io();
-        
-        this.socket.on('connect', () => {
-            console.log('Connected to server');
+        // Only initialize socket if not already connected
+        if (this.socket && this.socket.connected) {
+            return;
+        }
+
+        try {
+            this.socket = io({
+                autoConnect: false, // Don't auto-connect
+                reconnection: true,
+                reconnectionDelay: 1000,
+                reconnectionAttempts: 5,
+                timeout: 20000
+            });
+            
+            this.socket.on('connect', () => {
+                console.log('Connected to server');
+                if (this.currentUser) {
+                    this.socket.emit('join-room', `user-${this.currentUser._id}`);
+                }
+            });
+
+            this.socket.on('notification', (data) => {
+                this.showToast(data.message, data.type || 'info');
+                this.updateNotificationCount();
+            });
+
+            this.socket.on('disconnect', (reason) => {
+                console.log('Disconnected from server:', reason);
+                // Only try to reconnect if it wasn't intentional
+                if (reason === 'io server disconnect') {
+                    this.socket.connect();
+                }
+            });
+
+            this.socket.on('connect_error', (error) => {
+                console.log('Socket connection error:', error);
+            });
+
+            // Connect only after user is authenticated
             if (this.currentUser) {
-                this.socket.emit('join-room', `user-${this.currentUser._id}`);
+                this.socket.connect();
             }
-        });
-
-        this.socket.on('notification', (data) => {
-            this.showToast(data.message, data.type || 'info');
-            this.updateNotificationCount();
-        });
-
-        this.socket.on('disconnect', () => {
-            console.log('Disconnected from server');
-        });
+        } catch (error) {
+            console.error('Socket initialization error:', error);
+        }
     }
 
     async checkAuth() {
@@ -457,20 +485,43 @@ class GlotechApp {
             password: formData.get('password')
         };
 
+        // Show loading state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Signing In...';
+        submitBtn.disabled = true;
+
         try {
             const response = await this.apiCall('/auth/login', 'POST', loginData);
             
             if (response.success) {
                 localStorage.setItem('token', response.data.token);
                 this.currentUser = response.data.user;
-                this.initUI();
+                
+                // Connect socket after successful login
+                if (this.socket) {
+                    this.socket.connect();
+                }
+                
+                // Hide login modal and show main app
+                document.getElementById('login-modal').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                
+                // Initialize navigation and load dashboard
+                this.initNavigation();
+                this.loadPage('dashboard');
+                
                 this.showToast('Login successful!', 'success');
             } else {
-                this.showLoginError(response.message);
+                this.showLoginError(response.message || 'Login failed');
             }
         } catch (error) {
             console.error('Login error:', error);
-            this.showLoginError('Login failed. Please try again.');
+            this.showLoginError('Login failed. Please check your connection and try again.');
+        } finally {
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
         }
     }
 
@@ -541,8 +592,38 @@ class GlotechApp {
             config.body = JSON.stringify(data);
         }
 
-        const response = await fetch(`${this.apiBase}${endpoint}`, config);
-        return await response.json();
+        try {
+            const response = await fetch(`${this.apiBase}${endpoint}`, config);
+            
+            // Handle different response types
+            if (response.status === 401) {
+                // Unauthorized - clear token and show login
+                localStorage.removeItem('token');
+                this.currentUser = null;
+                this.showLogin();
+                throw new Error('Authentication required');
+            }
+            
+            if (response.status === 502) {
+                throw new Error('Server temporarily unavailable. Please try again.');
+            }
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error('API call error:', error);
+            
+            // Handle network errors
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                throw new Error('Network error. Please check your connection.');
+            }
+            
+            throw error;
+        }
     }
 
     async updateNotificationCount() {
