@@ -23,11 +23,11 @@ DEBUG = config('DEBUG', default=False, cast=bool)  # Default to False for produc
 PORT = config('PORT', default='8000')
 
 # ALLOWED_HOSTS configuration for Railway and Vercel
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.up.railway.app,.vercel.app').split(',')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.up.railway.app,.vercel.app,web-production-75024.up.railway.app').split(',')
 
 # CSRF Trusted Origins for Railway and Vercel
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', 
-                              default='http://localhost:8000,http://127.0.0.1:8000,https://*.up.railway.app,https://*.vercel.app').split(',')
+                              default='http://localhost:8000,http://127.0.0.1:8000,https://*.up.railway.app,https://*.vercel.app,https://web-production-75024.up.railway.app').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -135,7 +135,18 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Static files finders
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+# Use WhiteNoise for static files in production
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
@@ -559,8 +570,25 @@ IS_RAILWAY = config('RAILWAY_ENVIRONMENT', default=None) is not None
 IS_VERCEL = config('VERCEL', default=None) is not None
 
 if IS_RAILWAY or IS_VERCEL:
-    # Ensure static files are collected
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # Force DEBUG to False in production
+    DEBUG = False
+    
+    # Ensure static files are collected and served properly
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+    
+    # Add Railway domain to ALLOWED_HOSTS if not already there
+    railway_host = config('RAILWAY_PUBLIC_DOMAIN', default=None)
+    if railway_host and railway_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(railway_host)
+    
+    # Add any Railway URL patterns
+    railway_url = config('RAILWAY_STATIC_URL', default=None)
+    if railway_url:
+        ALLOWED_HOSTS.extend([
+            '.up.railway.app',
+            '.railway.app',
+            'web-production-75024.up.railway.app'  # Your specific Railway domain
+        ])
     
     # Use Redis for channels if available
     if REDIS_URL:
@@ -581,6 +609,15 @@ if IS_RAILWAY or IS_VERCEL:
                 'BACKEND': 'channels.layers.InMemoryChannelLayer',
             },
         }
+
+# =============================================================================
+# WHITENOISE CONFIGURATION FOR STATIC FILES
+# =============================================================================
+
+# WhiteNoise settings for serving static files
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = True
+WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'zip', 'gz', 'tgz', 'bz2', 'tbz', 'xz', 'br']
 
 # =============================================================================
 # SILENCED SYSTEM CHECKS
