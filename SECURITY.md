@@ -1,142 +1,90 @@
 # 🔒 Security Guidelines
 
-## ⚠️ IMPORTANT: Before Deployment
+## ⚠️ IMPORTANT SECURITY NOTICE
 
-### 1. Environment Variables
-**NEVER commit your `.env` file to version control!**
+This repository contains a school management system. Please follow these security guidelines:
 
-The `.env` file contains sensitive information:
-- `SECRET_KEY` - Django secret key (must be unique and random)
-- Database credentials
-- Email passwords
-- API keys
+### 🚨 **NEVER COMMIT SECRETS**
 
-### 2. Generate a New SECRET_KEY
+**DO NOT commit any of the following to this repository:**
+- Real database connection strings
+- JWT secrets or session secrets
+- API keys (M-Pesa, email, etc.)
+- Passwords or authentication tokens
+- SSL certificates or private keys
+- Any `.env` files with real values
 
-Before deploying, generate a new secret key:
+### ✅ **Safe Practices**
 
-```python
-# Run this in Python shell
-from django.core.management.utils import get_random_secret_key
-print(get_random_secret_key())
-```
+1. **Environment Variables**: Always use environment variables for secrets
+2. **Example Files**: Only commit `.env.example` with placeholder values
+3. **Documentation**: Use generic placeholders in documentation
+4. **Local Development**: Create your own `.env` file locally (never commit it)
 
-Or use this command:
+### 🔧 **Setting Up Secrets Safely**
+
+#### For Local Development:
 ```bash
-python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+# Copy the example file
+cp .env.example .env
+
+# Edit .env with your real values (this file is gitignored)
+nano .env
 ```
 
-### 3. Database Security
+#### For Production (Railway):
+```bash
+# Set environment variables in Railway dashboard or CLI
+railway variables set MONGODB_URI="your-real-mongodb-uri"
+railway variables set JWT_SECRET="your-real-jwt-secret"
+railway variables set SESSION_SECRET="your-real-session-secret"
+```
 
-- **SQLite**: The `db.sqlite3` file is excluded from git (contains all user data)
-- **Production**: Use PostgreSQL with strong credentials
-- **Backups**: Regular backups are essential
+### 🛡️ **Default Credentials**
 
-### 4. Files Excluded from Git
+The system includes default demo credentials for testing:
+- **Admin**: `admin` / `admin123`
+- **Teacher**: `john.teacher` / `teacher123`
+- **Student**: `jane.student` / `student123`
 
-These files are automatically excluded (see `.gitignore`):
-- `.env` - Environment variables
-- `db.sqlite3` - Database file
-- `LOGIN_CREDENTIALS.txt` - Admin credentials
-- `*.log` - Log files
-- `media/` - User uploaded files
-- `staticfiles/` - Collected static files
+**⚠️ CHANGE THESE IMMEDIATELY IN PRODUCTION!**
 
-### 5. Production Checklist
+### 📋 **Security Checklist**
 
 Before deploying to production:
 
-- [ ] Generate new `SECRET_KEY`
-- [ ] Set `DEBUG=False`
-- [ ] Configure proper `ALLOWED_HOSTS`
-- [ ] Set up PostgreSQL database
-- [ ] Configure email settings
-- [ ] Enable HTTPS
-- [ ] Set up proper CSRF_TRUSTED_ORIGINS
-- [ ] Review security settings in `config/settings.py`
-- [ ] Change default admin password
-- [ ] Set up regular backups
+- [ ] All secrets are set as environment variables
+- [ ] Default passwords have been changed
+- [ ] Database has proper authentication
+- [ ] HTTPS is enabled
+- [ ] CORS is properly configured
+- [ ] Rate limiting is active
+- [ ] Input validation is in place
+- [ ] No sensitive data in logs
 
-### 6. Sensitive Data in This Repository
+### 🚨 **If Secrets Are Exposed**
 
-**What's Safe:**
-- Source code
-- Configuration templates (`.env.example`)
-- Documentation
-- Static assets
+If you accidentally commit secrets:
 
-**What's NOT Safe (and excluded):**
-- `.env` file with real credentials
-- Database files
-- User uploaded media
-- Log files with sensitive data
-- Credential files
+1. **Immediately rotate all exposed secrets**
+2. **Remove secrets from git history** (use `git filter-branch` or BFG)
+3. **Update all systems using the old secrets**
+4. **Review access logs for unauthorized usage**
 
-### 7. If Secrets Were Exposed
+### 📞 **Reporting Security Issues**
 
-If you accidentally committed secrets:
+If you find security vulnerabilities:
+1. Do NOT create a public issue
+2. Contact the maintainers privately
+3. Provide detailed information about the vulnerability
+4. Allow time for the issue to be fixed before disclosure
 
-1. **Immediately rotate all credentials:**
-   - Generate new SECRET_KEY
-   - Change database passwords
-   - Rotate API keys
-   - Change admin passwords
+### 🔗 **Resources**
 
-2. **Remove from Git history:**
-   ```bash
-   # This is complex - consider creating a new repository
-   git filter-branch --force --index-filter \
-   "git rm --cached --ignore-unmatch .env" \
-   --prune-empty --tag-name-filter cat -- --all
-   ```
-
-3. **Force push (WARNING: Destructive):**
-   ```bash
-   git push origin --force --all
-   ```
-
-### 8. Admin Credentials
-
-- Default admin credentials should be changed immediately after first login
-- Use strong passwords (minimum 12 characters, mixed case, numbers, symbols)
-- Enable two-factor authentication if available
-- Never share admin credentials via email or chat
-
-### 9. Regular Security Practices
-
-- Keep Django and dependencies updated
-- Monitor security advisories
-- Review access logs regularly
-- Implement rate limiting
-- Use HTTPS in production
-- Regular security audits
-
-### 10. Reporting Security Issues
-
-If you discover a security vulnerability, please email: security@yourschool.com
-
-**DO NOT** create public GitHub issues for security vulnerabilities.
+- [OWASP Security Guidelines](https://owasp.org/)
+- [Node.js Security Best Practices](https://nodejs.org/en/docs/guides/security/)
+- [MongoDB Security Checklist](https://docs.mongodb.com/manual/administration/security-checklist/)
 
 ---
 
-## 🔐 Quick Security Setup
-
-```bash
-# 1. Copy example env file
-cp .env.example .env
-
-# 2. Generate new secret key
-python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-
-# 3. Update .env with the new key
-# Edit .env and replace SECRET_KEY value
-
-# 4. Never commit .env
-git status  # Should NOT show .env file
-
-# 5. For production, set environment variables directly on hosting platform
-```
-
----
-
-**Remember: Security is not a one-time setup, it's an ongoing process!**
+**Remember: Security is everyone's responsibility!** 🛡️

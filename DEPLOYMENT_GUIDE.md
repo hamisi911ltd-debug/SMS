@@ -53,11 +53,11 @@ This guide will help you deploy the Glotech School Management System to Railway 
    MONGODB_URI=your-mongodb-connection-string-here
    
    # JWT Configuration
-   JWT_SECRET=your-super-secret-jwt-key-here-make-it-long-and-random
+   JWT_SECRET=generate-a-strong-random-secret-here-make-it-long
    JWT_EXPIRES_IN=24h
    
    # Session Configuration
-   SESSION_SECRET=your-session-secret-key-here-also-make-it-random
+   SESSION_SECRET=generate-another-strong-random-secret-here
    
    # Server Configuration
    NODE_ENV=production
@@ -111,8 +111,8 @@ This guide will help you deploy the Glotech School Management System to Railway 
 4. **Set Environment Variables:**
    ```bash
    railway variables set MONGODB_URI="your-mongodb-connection-string"
-   railway variables set JWT_SECRET="your-jwt-secret"
-   railway variables set SESSION_SECRET="your-session-secret"
+   railway variables set JWT_SECRET="generate-a-strong-random-secret"
+   railway variables set SESSION_SECRET="generate-another-strong-secret"
    railway variables set NODE_ENV="production"
    ```
 
