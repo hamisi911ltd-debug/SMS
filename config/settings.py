@@ -142,11 +142,8 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-# Use WhiteNoise for static files in production
-if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-else:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# Always use WhiteNoise storage for consistency
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
@@ -590,6 +587,10 @@ if IS_RAILWAY or IS_VERCEL:
             'web-production-75024.up.railway.app'  # Your specific Railway domain
         ])
     
+    # Force static files to be served by WhiteNoise
+    WHITENOISE_USE_FINDERS = False  # Disable in production for performance
+    WHITENOISE_AUTOREFRESH = False  # Disable in production
+    
     # Use Redis for channels if available
     if REDIS_URL:
         CHANNEL_LAYERS = {
@@ -618,6 +619,20 @@ if IS_RAILWAY or IS_VERCEL:
 WHITENOISE_USE_FINDERS = True
 WHITENOISE_AUTOREFRESH = True
 WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'zip', 'gz', 'tgz', 'bz2', 'tbz', 'xz', 'br']
+WHITENOISE_MAX_AGE = 31536000  # 1 year
+WHITENOISE_STATIC_PREFIX = '/static/'
+
+# Force correct MIME types
+WHITENOISE_MIMETYPES = {
+    '.css': 'text/css',
+    '.js': 'application/javascript',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.ico': 'image/x-icon',
+}
 
 # =============================================================================
 # SILENCED SYSTEM CHECKS
