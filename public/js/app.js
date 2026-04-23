@@ -12,11 +12,16 @@ class GlotechApp {
             // Initialize Socket.IO
             this.initSocket();
             
-            // Check authentication
-            await this.checkAuth();
-            
-            // Initialize UI
+            // Initialize UI first
             this.initUI();
+            
+            // Check authentication (but don't fail if no token)
+            try {
+                await this.checkAuth();
+            } catch (error) {
+                console.log('No authentication token found, showing login');
+                this.showLogin();
+            }
             
             // Hide loading screen
             this.hideLoading();
@@ -51,7 +56,7 @@ class GlotechApp {
     async checkAuth() {
         const token = localStorage.getItem('token');
         if (!token) {
-            throw new Error('No token found');
+            return false; // Don't throw error, just return false
         }
 
         try {
@@ -61,27 +66,34 @@ class GlotechApp {
                 this.updateUserUI();
                 return true;
             } else {
-                throw new Error('Invalid token');
+                localStorage.removeItem('token');
+                return false;
             }
         } catch (error) {
             localStorage.removeItem('token');
-            throw error;
+            return false;
         }
     }
 
     initUI() {
-        // Show main app
-        document.getElementById('app').classList.remove('hidden');
-        document.getElementById('login-modal').classList.add('hidden');
-
-        // Initialize navigation
-        this.initNavigation();
-
-        // Initialize event listeners
+        // Initialize basic UI elements
         this.initEventListeners();
-
-        // Load dashboard
-        this.loadPage('dashboard');
+        
+        // Check if user is authenticated
+        if (this.currentUser) {
+            // Show main app
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('login-modal').classList.add('hidden');
+            
+            // Initialize navigation
+            this.initNavigation();
+            
+            // Load dashboard
+            this.loadPage('dashboard');
+        } else {
+            // Show login
+            this.showLogin();
+        }
     }
 
     initNavigation() {
