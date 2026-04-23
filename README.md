@@ -1,384 +1,293 @@
-# GLOTECH HIGH SCHOOL ADMINISTRATION SYSTEM
-## A Comprehensive Digital Transformation Solution for Modern Education
+# Glotech High School Management System
 
----
+A comprehensive school administration system built with Node.js, Express, MongoDB, and modern web technologies.
 
-## 📋 EXECUTIVE SUMMARY
+## Features
 
-The Glotech High School Administration System is a comprehensive, role-based web application designed specifically for Kenyan secondary schools. Built with Django and featuring a modern glassmorphism UI, the system digitizes and streamlines every aspect of school management—from student records and academic performance to financial management and communication.
+### 🎓 Academic Management
+- Student enrollment and records management
+- Teacher profiles and assignments
+- Subject and class management
+- Exam scheduling and results processing
+- Grade calculation and reporting
 
----
+### 👥 User Management
+- Role-based access control (Admin, Teacher, Student, Parent, Accountant)
+- Secure authentication with JWT
+- User profiles and preferences
+- Password management
 
-## 🎯 CORE FUNCTIONALITIES BY MODULE
-
-### 1. **Student Management Module**
-- Complete student profiles with admission numbers, KCPE results, and personal details
-- Track clubs, sports, and co-curricular activities
-- Document management (birth certificates, KCPE certificates, medical records)
-- Transfer history between classes and streams
-- Sibling tracking within the school
-
-### 2. **Teacher Management Module**
-- Professional profiles with TSC numbers, qualifications, and specializations
-- Leave management with approval workflow
-- Performance evaluation system
-- Salary and payroll tracking
-- Training and professional development records
-- Awards and recognition tracking
-
-### 3. **Academic Module**
-- Term-based academic calendar (3 terms per year)
-- Subject allocation with Kenyan curriculum categories
-- Exam scheduling and management
-- Result entry with automatic grade calculation (Kenyan 8-4-4 system)
-- Class and stream rankings
-- Homework assignment and submission
-- Lesson planning tools
-- Performance analytics and trend analysis
-
-### 4. **Finance Module**
-- Fee structure management by class and term
-- Invoice generation and tracking
-- Multiple payment methods (Cash, M-Pesa, Bank Transfer)
-- M-Pesa integration for mobile payments
-- Expense tracking and categorization
-- Budget management
-- Financial aid and bursary records
-- Outstanding fee reports and reminders
-
-### 5. **Attendance Module**
-- Daily student attendance tracking
-- Teacher attendance monitoring
-- Multiple session tracking (morning, afternoon)
-- Holiday and event management
-- Late comers analysis
-- Automated parent notifications for absences
-- Monthly attendance summaries
+### 📊 Attendance System
+- Daily attendance marking
 - Attendance reports and analytics
+- Absenteeism tracking
+- Parent notifications
 
-### 6. **Communication Module**
+### 💰 Financial Management
+- Fee structure management
+- Payment processing and tracking
+- Financial reports and analytics
+- Fee defaulter management
+- Invoice generation
+
+### 💬 Communication
 - Internal messaging system
-- Broadcast announcements
-- Notification center
-- Email and SMS logging
-- Message templates for common communications
-- Read receipts and tracking
+- School announcements
+- Real-time notifications
+- Parent-teacher communication
 
-### 7. **Reporting Module**
-- PDF report generation
-- Custom report builder
-- Student report cards
-- Class performance analysis
-- Financial statements
-- Attendance reports
-- Teacher performance reports
-- Export to CSV/Excel
+### 📈 Reports & Analytics
+- Academic performance reports
+- Attendance analytics
+- Financial summaries
+- Custom report generation
+- Data export capabilities
 
----
+## Technology Stack
 
-## 🚀 GETTING STARTED
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: JWT (JSON Web Tokens)
+- **Real-time**: Socket.IO
+- **Frontend**: Vanilla JavaScript, Tailwind CSS
+- **UI Design**: Glassmorphism design system
+- **Deployment**: Railway (Production ready)
+
+## Quick Start
 
 ### Prerequisites
-- Python 3.11 or higher
-- pip (Python package manager)
-- Virtual environment (recommended)
+- Node.js (v18 or higher)
+- MongoDB (local or cloud)
+- npm or yarn
 
 ### Installation
 
 1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd glotech-high-school-system
+   ```bash
+   git clone <repository-url>
+   cd glotech-school-management
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Setup**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Update the `.env` file with your configuration:
+   ```env
+   MONGODB_URI=mongodb://localhost:27017/glotech_school
+   JWT_SECRET=your-super-secret-jwt-key-here
+   SESSION_SECRET=your-session-secret-key-here
+   NODE_ENV=development
+   PORT=3000
+   ```
+
+4. **Database Setup**
+   ```bash
+   npm run setup-db
+   ```
+
+5. **Start the application**
+   ```bash
+   # Development mode
+   npm run dev
+   
+   # Production mode
+   npm start
+   ```
+
+6. **Access the application**
+   Open your browser and navigate to `http://localhost:3000`
+
+## Default Login Credentials
+
+After running the database setup, you can use these default accounts:
+
+### Administrator
+- **Username**: `admin`
+- **Password**: `admin123`
+- **Role**: Admin (Full system access)
+
+### Teacher
+- **Username**: `john.teacher`
+- **Password**: `teacher123`
+- **Role**: Teacher
+
+### Student
+- **Username**: `jane.student`
+- **Password**: `student123`
+- **Role**: Student
+
+⚠️ **Important**: Change these default passwords after first login!
+
+## Project Structure
+
+```
+glotech-school-management/
+├── config/                 # Configuration files
+├── middleware/            # Express middleware
+├── models/               # MongoDB models
+├── routes/               # API routes
+├── public/               # Static files
+│   ├── css/             # Stylesheets
+│   ├── js/              # Client-side JavaScript
+│   └── images/          # Images and assets
+├── scripts/             # Utility scripts
+├── server.js            # Main server file
+├── package.json         # Dependencies and scripts
+└── README.md           # This file
 ```
 
-2. **Create and activate virtual environment**
-```bash
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-```
+## API Documentation
 
-3. **Install dependencies**
-```bash
-pip install -r requirements.txt
-```
+### Authentication Endpoints
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `GET /api/auth/me` - Get current user
+- `PUT /api/auth/profile` - Update profile
+- `PUT /api/auth/change-password` - Change password
 
-4. **Set up environment variables**
-- Copy `.env.example` to `.env`
-- Update the SECRET_KEY and other settings as needed
+### Student Management
+- `GET /api/students` - Get all students
+- `POST /api/students` - Create new student
+- `GET /api/students/:id` - Get student details
+- `PUT /api/students/:id` - Update student
+- `DELETE /api/students/:id` - Deactivate student
 
-5. **Run migrations**
-```bash
-python manage.py migrate
-```
+### Academic Management
+- `GET /api/academics/subjects` - Get subjects
+- `GET /api/academics/classes` - Get classes
+- `GET /api/academics/timetable` - Get timetables
+- `POST /api/academics/grades` - Submit grades
 
-6. **Create superuser (admin)**
-```bash
-python manage.py createsuperuser
-```
+### Financial Management
+- `GET /api/finance/fees` - Get fee structure
+- `GET /api/finance/payments` - Get payments
+- `POST /api/finance/payments` - Record payment
+- `GET /api/finance/student/:id/statement` - Get fee statement
 
-7. **Run the development server**
-```bash
-python manage.py runserver
-```
+### Attendance Management
+- `GET /api/attendance/today` - Get today's attendance
+- `POST /api/attendance/mark` - Mark attendance
+- `GET /api/attendance/student/:id` - Get student attendance
 
-8. **Access the system**
-- Main site: http://127.0.0.1:8000
-- Admin panel: http://127.0.0.1:8000/admin
+## Deployment
 
----
+### Railway Deployment
 
-## 👥 DEFAULT LOGIN CREDENTIALS
+1. **Connect to Railway**
+   ```bash
+   # Install Railway CLI
+   npm install -g @railway/cli
+   
+   # Login to Railway
+   railway login
+   
+   # Initialize project
+   railway init
+   ```
 
-### Admin Accounts
-- Username: `eugen` | Password: `38624586`
-- Username: `kenyan` | Password: `38624586`
+2. **Set Environment Variables**
+   ```bash
+   railway variables set MONGODB_URI=your-mongodb-connection-string
+   railway variables set JWT_SECRET=your-jwt-secret
+   railway variables set NODE_ENV=production
+   ```
 
-### Teacher Account
-- Username: `john.teacher` | Password: `Mwangi@2024!`
+3. **Deploy**
+   ```bash
+   railway up
+   ```
 
-### Student Account
-- Username: `james.student` | Password: `Odhiambo@2024`
+### Manual Deployment
 
-**Note:** Change these passwords immediately after first login for security.
+1. **Build the application**
+   ```bash
+   npm run build
+   ```
 
----
+2. **Set production environment variables**
 
-## 📊 ROLE-BASED FUNCTIONALITY
+3. **Start the production server**
+   ```bash
+   npm start
+   ```
 
-### **Administrator Role**
-- Complete system oversight and configuration
-- User management and role assignment
-- Financial monitoring and reporting
-- System health and audit logs
-- Bulk operations and data management
+## Development
 
-### **Teacher Role**
-- Class and subject management
-- Attendance marking
-- Result entry and grade calculation
-- Homework assignment
-- Parent communication
-- Performance analytics
+### Available Scripts
 
-### **Student Role**
-- View academic results and progress
-- Check attendance records
-- Access homework assignments
-- View fee statements
-- Receive notifications
-- Download report cards
+- `npm start` - Start production server
+- `npm run dev` - Start development server with nodemon
+- `npm run setup-db` - Initialize database with default data
+- `npm run seed` - Seed database with sample data
 
-### **Parent Role**
-- Monitor children's academic progress
-- View attendance records
-- Pay fees via M-Pesa
-- Communicate with teachers
-- Access report cards and documents
+### Adding New Features
 
-### **Accountant Role**
-- Fee structure management
-- Invoice generation
-- Payment processing
-- M-Pesa reconciliation
-- Expense tracking
-- Financial reporting
+1. **Create Models** - Add new MongoDB schemas in `models/`
+2. **Create Routes** - Add API endpoints in `routes/`
+3. **Add Middleware** - Create custom middleware in `middleware/`
+4. **Update Frontend** - Add UI components in `public/`
 
----
+## Contributing
 
-## 🌟 KEY FEATURES
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### Kenyan-Specific Design
-- Built around Kenyan 8-4-4 and CBC curriculum
-- KCPE index tracking and results management
-- TSC number integration for teachers
-- Kenyan grading system (A, A-, B+, etc.)
-- M-Pesa payment integration
-- Kenyan public holidays calendar
+## Security Features
 
-### Modern User Interface
-- Glassmorphism design
-- Responsive (works on desktop, tablet, mobile)
-- Dark theme optimized
-- Intuitive navigation
-- Real-time updates
+- JWT-based authentication
+- Password hashing with bcrypt
+- Rate limiting on API endpoints
+- Input validation and sanitization
+- CORS protection
+- Helmet.js security headers
+- Session management
 
-### Comprehensive Reporting
-- Custom report builder
-- PDF export
-- Excel/CSV export
-- Visual charts and analytics
-- Scheduled report delivery
+## Performance Features
 
-### Security Features
-- Role-based access control
-- Session management with auto-logout
-- Password encryption
-- Audit logging
-- CSRF and XSS protection
-- HTTPS ready
+- Database indexing for fast queries
+- Response compression
+- Static file caching
+- Efficient pagination
+- Real-time updates with Socket.IO
 
----
+## Browser Support
 
-## 📈 SYSTEM MODULES
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
-| Module | Description | Key Features |
-|--------|-------------|--------------|
-| **Accounts** | User management and authentication | Roles, permissions, notifications, audit logs |
-| **Students** | Student information management | Profiles, documents, clubs, sports, transfers |
-| **Teachers** | Teacher management | Profiles, leave, performance, salary, documents |
-| **Academics** | Academic operations | Years, terms, classes, subjects, exams, results |
-| **Finance** | Financial management | Fees, invoices, payments, expenses, budgets |
-| **Attendance** | Attendance tracking | Student/teacher attendance, holidays, reports |
-| **Messaging** | Communication | Messages, announcements, notifications, templates |
-| **Dashboard** | Overview and analytics | Role-specific dashboards with key metrics |
-| **Reports** | Report generation | Custom reports, PDF export, analytics |
+## License
 
----
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🔧 CONFIGURATION
+## Support
 
-### Environment Variables (.env)
-```
-SECRET_KEY=your-secret-key-here
-DEBUG=False
-ALLOWED_HOSTS=localhost,127.0.0.1
-DATABASE_URL=sqlite:///db.sqlite3
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_HOST_USER=your-email@gmail.com
-EMAIL_HOST_PASSWORD=your-password
-```
-
-### Admin Panel Customization
-The system uses Jazzmin for a beautiful admin interface. Customize in `config/settings.py`:
-- Site title and branding
-- Color schemes
-- Navigation structure
-- Icons and logos
-
----
-
-## 📱 M-PESA INTEGRATION
-
-The system includes M-Pesa STK Push integration for fee payments:
-
-1. Configure M-Pesa credentials in `.env`
-2. Set up callback URL
-3. Test in sandbox environment
-4. Deploy to production
-
----
-
-## 🛠️ DEVELOPMENT
-
-### Project Structure
-```
-glotech-high-school-system/
-├── accounts/          # User management
-├── students/          # Student management
-├── teachers/          # Teacher management
-├── academics/         # Academic operations
-├── finance/           # Financial management
-├── attendance/        # Attendance tracking
-├── messaging/         # Communication
-├── dashboard/         # Dashboards
-├── reports/           # Report generation
-├── config/            # Project settings
-├── templates/         # HTML templates
-├── static/            # Static files (CSS, JS, images)
-└── media/             # User uploads
-```
-
-### Running Tests
-```bash
-python manage.py test
-```
-
-### Creating Sample Data
-```bash
-python manage.py populate_sample_data
-```
-
----
-
-## 📚 DOCUMENTATION
-
-- [Installation Checklist](INSTALLATION_CHECKLIST.md)
-- [Deployment Guide](DEPLOYMENT_GUIDE.md)
-- [Quick Start Guide](QUICK_START.md)
-- [Final System Report](FINAL_SYSTEM_REPORT.md)
-- [Documentation Index](DOCUMENTATION_INDEX.md)
-
----
-
-## 🔒 SECURITY
-
-- All passwords are hashed using Django's PBKDF2 algorithm
-- CSRF protection enabled
-- XSS protection enabled
-- SQL injection prevention
-- Secure session management
-- HTTPS ready for production
-- Regular security audits recommended
-
----
-
-## 🚀 DEPLOYMENT
-
-### Production Checklist
-1. Set `DEBUG=False` in `.env`
-2. Configure strong `SECRET_KEY`
-3. Set up proper `ALLOWED_HOSTS`
-4. Configure email settings
-5. Set up HTTPS/SSL
-6. Configure database (PostgreSQL recommended)
-7. Set up Redis for caching (optional)
-8. Configure static file serving
-9. Set up backup strategy
-10. Configure monitoring and logging
-
-### Deployment Platforms
-- Railway (recommended)
-- Heroku
-- DigitalOcean
-- AWS
-- Azure
-
----
-
-## 📞 SUPPORT
-
-For issues, questions, or contributions:
+For support and questions:
 - Create an issue in the repository
-- Contact system administrator
-- Refer to documentation files
+- Contact the development team
+- Check the documentation
+
+## Changelog
+
+### Version 1.0.0
+- Initial release
+- Complete school management system
+- User authentication and authorization
+- Student and teacher management
+- Academic and financial modules
+- Real-time messaging and notifications
 
 ---
 
-## 📄 LICENSE
-
-This project is proprietary software for Glotech High School.
-
----
-
-## 🎓 ABOUT GLOTECH HIGH SCHOOL
-
-Glotech High School is committed to providing quality education through modern technology and innovative teaching methods. This administration system is part of our digital transformation initiative to enhance efficiency, transparency, and communication across all stakeholders.
-
----
-
-## 🔄 VERSION HISTORY
-
-- **v1.0.0** - Initial release with core modules
-- **v1.1.0** - Added M-Pesa integration
-- **v1.2.0** - Enhanced reporting features
-- **v2.0.0** - Complete system rebrand to Glotech High School
-
----
-
-**Last Updated:** 2024
-**System Status:** Production Ready
-**Current Version:** 2.0.0
+**Glotech High School Management System** - Empowering education through technology.

@@ -1,428 +1,288 @@
-# 🚀 PRODUCTION DEPLOYMENT GUIDE
+# Deployment Guide - Glotech School Management System
 
-Complete guide to deploy your Kenyan Schools Administration System to production.
+This guide will help you deploy the Glotech School Management System to Railway (or other platforms).
 
----
+## Prerequisites
 
-## 📋 PRE-DEPLOYMENT CHECKLIST
+1. **Node.js** (v18 or higher)
+2. **MongoDB Database** (Cloud or local)
+3. **Git** for version control
+4. **Railway Account** (for deployment)
 
-Before deploying, ensure:
+## Step 1: Database Setup
 
-- [ ] All tests pass
-- [ ] Database migrations are up to date
-- [ ] Static files are collected
-- [ ] Environment variables are configured
-- [ ] SECRET_KEY is strong and unique
-- [ ] DEBUG=False in production
-- [ ] ALLOWED_HOSTS is properly set
-- [ ] Email settings are configured
-- [ ] Database backups are planned
+### Option A: MongoDB Atlas (Recommended for Production)
 
----
+1. **Create MongoDB Atlas Account**
+   - Go to [MongoDB Atlas](https://www.mongodb.com/atlas)
+   - Sign up for a free account
+   - Create a new cluster
 
-## 🌐 DEPLOYMENT OPTIONS
+2. **Get Connection String**
+   - Click "Connect" on your cluster
+   - Choose "Connect your application"
+   - Copy the connection string
+   - Replace `<password>` with your database password
 
-### Option 1: Railway (Recommended - Easiest)
+3. **Example Connection String:**
+   ```
+   mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/glotech_school?retryWrites=true&w=majority
+   ```
 
-**Pros**: Free tier, automatic deployments, PostgreSQL included, easy setup  
-**Cons**: Limited free tier resources
+### Option B: Local MongoDB (Development Only)
 
-#### Steps:
+1. **Install MongoDB**
+   - Download from [MongoDB Community Server](https://www.mongodb.com/try/download/community)
+   - Install and start the MongoDB service
 
-1. **Prepare Repository**
+2. **Connection String:**
+   ```
+   mongodb://localhost:27017/glotech_school
+   ```
+
+## Step 2: Environment Configuration
+
+1. **Create `.env` file** (copy from `.env.example`):
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Update `.env` with your values:**
+   ```env
+   # Database Configuration
+   MONGODB_URI=your-mongodb-connection-string-here
+   
+   # JWT Configuration
+   JWT_SECRET=your-super-secret-jwt-key-here-make-it-long-and-random
+   JWT_EXPIRES_IN=24h
+   
+   # Session Configuration
+   SESSION_SECRET=your-session-secret-key-here-also-make-it-random
+   
+   # Server Configuration
+   NODE_ENV=production
+   PORT=3000
+   FRONTEND_URL=https://your-app-domain.railway.app
+   ```
+
+## Step 3: Local Testing
+
+1. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Setup Database:**
+   ```bash
+   npm run setup-db
+   ```
+
+3. **Start Development Server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Test the Application:**
+   - Open `http://localhost:3000`
+   - Login with default credentials:
+     - **Admin**: `admin` / `admin123`
+     - **Teacher**: `john.teacher` / `teacher123`
+     - **Student**: `jane.student` / `student123`
+
+## Step 4: Railway Deployment
+
+### Method 1: Railway CLI (Recommended)
+
+1. **Install Railway CLI:**
+   ```bash
+   npm install -g @railway/cli
+   ```
+
+2. **Login to Railway:**
+   ```bash
+   railway login
+   ```
+
+3. **Initialize Project:**
+   ```bash
+   railway init
+   ```
+
+4. **Set Environment Variables:**
+   ```bash
+   railway variables set MONGODB_URI="your-mongodb-connection-string"
+   railway variables set JWT_SECRET="your-jwt-secret"
+   railway variables set SESSION_SECRET="your-session-secret"
+   railway variables set NODE_ENV="production"
+   ```
+
+5. **Deploy:**
+   ```bash
+   railway up
+   ```
+
+### Method 2: GitHub Integration
+
+1. **Push to GitHub:**
    ```bash
    git init
    git add .
    git commit -m "Initial commit"
-   git remote add origin <your-github-repo>
+   git branch -M main
+   git remote add origin https://github.com/yourusername/glotech-school.git
    git push -u origin main
    ```
 
-2. **Create Railway Account**
-   - Go to https://railway.app
-   - Sign up with GitHub
-
-3. **Create New Project**
+2. **Connect to Railway:**
+   - Go to [Railway Dashboard](https://railway.app/dashboard)
    - Click "New Project"
    - Select "Deploy from GitHub repo"
    - Choose your repository
 
-4. **Add PostgreSQL Database**
-   - Click "New"
-   - Select "Database"
-   - Choose "PostgreSQL"
-   - Railway will provide DATABASE_URL automatically
+3. **Set Environment Variables:**
+   - Go to your project settings
+   - Add the environment variables from your `.env` file
 
-5. **Set Environment Variables**
-   ```
-   SECRET_KEY=<your-strong-secret-key>
-   DEBUG=False
-   ALLOWED_HOSTS=.up.railway.app
-   DATABASE_URL=<automatically-set-by-railway>
-   ```
+4. **Deploy:**
+   - Railway will automatically deploy when you push to main branch
 
-6. **Deploy**
-   - Railway deploys automatically
-   - Check logs for any errors
-   - Run migrations: `railway run python manage.py migrate`
+## Step 5: Post-Deployment Setup
 
-7. **Create Superuser**
+1. **Setup Database (Production):**
    ```bash
-   railway run python manage.py createsuperuser
+   # If using Railway CLI
+   railway run npm run setup-db
+   
+   # Or access the deployed app and it will create default users automatically
    ```
 
----
+2. **Verify Deployment:**
+   - Visit your Railway app URL
+   - Test login with default credentials
+   - Change default passwords immediately!
 
-### Option 2: Heroku
+3. **Custom Domain (Optional):**
+   - Go to Railway project settings
+   - Add your custom domain
+   - Update DNS records as instructed
 
-**Pros**: Well-documented, reliable, PostgreSQL included  
-**Cons**: No free tier anymore
+## Step 6: Security Checklist
 
-#### Steps:
+### Immediate Actions After Deployment:
 
-1. **Install Heroku CLI**
+1. **Change Default Passwords:**
+   - Login as admin and change the password
+   - Update all default user passwords
+
+2. **Update Environment Variables:**
+   - Use strong, unique secrets for JWT_SECRET and SESSION_SECRET
+   - Never commit `.env` files to version control
+
+3. **Database Security:**
+   - Ensure MongoDB Atlas has IP whitelisting enabled
+   - Use strong database passwords
+   - Enable database authentication
+
+4. **Application Security:**
+   - Review user permissions
+   - Test all authentication flows
+   - Verify rate limiting is working
+
+## Step 7: Monitoring and Maintenance
+
+1. **Monitor Application:**
+   - Check Railway logs for errors
+   - Monitor database performance
+   - Set up uptime monitoring
+
+2. **Regular Updates:**
+   - Keep dependencies updated
+   - Monitor security advisories
+   - Backup database regularly
+
+3. **Performance Optimization:**
+   - Monitor response times
+   - Optimize database queries
+   - Consider CDN for static assets
+
+## Troubleshooting
+
+### Common Issues:
+
+1. **Database Connection Failed:**
+   - Verify MONGODB_URI is correct
+   - Check MongoDB Atlas IP whitelist
+   - Ensure database user has proper permissions
+
+2. **Application Won't Start:**
+   - Check Railway logs for errors
+   - Verify all environment variables are set
+   - Ensure PORT is not hardcoded
+
+3. **Authentication Issues:**
+   - Verify JWT_SECRET is set
+   - Check if cookies are being set properly
+   - Ensure FRONTEND_URL matches your domain
+
+4. **Static Files Not Loading:**
+   - Verify public folder is being served
+   - Check file paths in HTML
+   - Ensure Railway is serving static files
+
+### Getting Help:
+
+1. **Check Logs:**
    ```bash
-   # Download from https://devcenter.heroku.com/articles/heroku-cli
+   railway logs
    ```
 
-2. **Login to Heroku**
-   ```bash
-   heroku login
-   ```
-
-3. **Create Heroku App**
-   ```bash
-   heroku create your-school-system
-   ```
-
-4. **Add PostgreSQL**
-   ```bash
-   heroku addons:create heroku-postgresql:mini
-   ```
-
-5. **Set Environment Variables**
-   ```bash
-   heroku config:set SECRET_KEY='<your-secret-key>'
-   heroku config:set DEBUG=False
-   heroku config:set ALLOWED_HOSTS='.herokuapp.com'
-   ```
-
-6. **Deploy**
-   ```bash
-   git push heroku main
-   ```
-
-7. **Run Migrations**
-   ```bash
-   heroku run python manage.py migrate
-   heroku run python manage.py createsuperuser
-   ```
-
-8. **Open App**
-   ```bash
-   heroku open
-   ```
-
----
-
-### Option 3: DigitalOcean/AWS/VPS
-
-**Pros**: Full control, scalable, cost-effective for large deployments  
-**Cons**: Requires more setup and maintenance
-
-#### Steps:
-
-1. **Create Server**
-   - Ubuntu 22.04 LTS recommended
-   - Minimum: 2GB RAM, 1 CPU, 25GB storage
-
-2. **Connect to Server**
-   ```bash
-   ssh root@your-server-ip
-   ```
-
-3. **Update System**
-   ```bash
-   apt update && apt upgrade -y
-   ```
-
-4. **Install Dependencies**
-   ```bash
-   apt install python3.11 python3.11-venv python3-pip postgresql nginx supervisor -y
-   ```
-
-5. **Create User**
-   ```bash
-   adduser schoolsystem
-   usermod -aG sudo schoolsystem
-   su - schoolsystem
-   ```
-
-6. **Clone Repository**
-   ```bash
-   git clone <your-repo-url>
-   cd KENYAN-SCHOOLS-ADMINISTRATION-SYSTEM
-   ```
-
-7. **Set Up Virtual Environment**
-   ```bash
-   python3.11 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-8. **Configure PostgreSQL**
-   ```bash
-   sudo -u postgres psql
-   CREATE DATABASE schoolsystem;
-   CREATE USER schooluser WITH PASSWORD 'strong-password';
-   GRANT ALL PRIVILEGES ON DATABASE schoolsystem TO schooluser;
-   \q
-   ```
-
-9. **Configure Environment**
-   ```bash
-   nano .env
-   # Add your environment variables
-   ```
-
-10. **Run Migrations**
-    ```bash
-    python manage.py migrate
-    python manage.py collectstatic --noinput
-    python manage.py createsuperuser
-    ```
-
-11. **Configure Gunicorn**
-    ```bash
-    # Create gunicorn config
-    nano gunicorn_config.py
-    ```
-    
-    ```python
-    bind = "127.0.0.1:8000"
-    workers = 3
-    ```
-
-12. **Configure Supervisor**
-    ```bash
-    sudo nano /etc/supervisor/conf.d/schoolsystem.conf
-    ```
-    
-    ```ini
-    [program:schoolsystem]
-    directory=/home/schoolsystem/KENYAN-SCHOOLS-ADMINISTRATION-SYSTEM
-    command=/home/schoolsystem/KENYAN-SCHOOLS-ADMINISTRATION-SYSTEM/venv/bin/gunicorn config.wsgi:application -c gunicorn_config.py
-    user=schoolsystem
-    autostart=true
-    autorestart=true
-    redirect_stderr=true
-    stdout_logfile=/home/schoolsystem/logs/gunicorn.log
-    ```
-
-13. **Configure Nginx**
-    ```bash
-    sudo nano /etc/nginx/sites-available/schoolsystem
-    ```
-    
-    ```nginx
-    server {
-        listen 80;
-        server_name your-domain.com;
-
-        location /static/ {
-            alias /home/schoolsystem/KENYAN-SCHOOLS-ADMINISTRATION-SYSTEM/staticfiles/;
-        }
-
-        location /media/ {
-            alias /home/schoolsystem/KENYAN-SCHOOLS-ADMINISTRATION-SYSTEM/media/;
-        }
-
-        location / {
-            proxy_pass http://127.0.0.1:8000;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-    }
-    ```
-
-14. **Enable Site**
-    ```bash
-    sudo ln -s /etc/nginx/sites-available/schoolsystem /etc/nginx/sites-enabled/
-    sudo nginx -t
-    sudo systemctl restart nginx
-    ```
-
-15. **Start Application**
-    ```bash
-    sudo supervisorctl reread
-    sudo supervisorctl update
-    sudo supervisorctl start schoolsystem
-    ```
-
-16. **Set Up SSL (Let's Encrypt)**
-    ```bash
-    sudo apt install certbot python3-certbot-nginx -y
-    sudo certbot --nginx -d your-domain.com
-    ```
-
----
-
-## 🔒 PRODUCTION ENVIRONMENT VARIABLES
-
-Create a `.env` file with these variables:
-
-```bash
-# Django Core
-SECRET_KEY=<generate-strong-50-char-key>
-DEBUG=False
-ALLOWED_HOSTS=your-domain.com,www.your-domain.com
-
-# Database (PostgreSQL)
-DATABASE_URL=postgresql://user:password@host:5432/dbname
-
-# Security
-CSRF_TRUSTED_ORIGINS=https://your-domain.com,https://www.your-domain.com
-
-# Email (Example with Gmail)
-EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER=your-email@gmail.com
-EMAIL_HOST_PASSWORD=your-app-password
-DEFAULT_FROM_EMAIL=noreply@your-school.com
-
-# Redis (Optional - for caching and WebSocket)
-REDIS_URL=redis://localhost:6379/0
-
-# M-Pesa (Optional - for fee payments)
-MPESA_CONSUMER_KEY=your-consumer-key
-MPESA_CONSUMER_SECRET=your-consumer-secret
-MPESA_SHORTCODE=your-shortcode
-MPESA_PASSKEY=your-passkey
-MPESA_CALLBACK_URL=https://your-domain.com/finance/mpesa/callback/
-```
-
----
-
-## 🔧 POST-DEPLOYMENT TASKS
-
-After deployment:
-
-1. **Create Superuser**
-   ```bash
-   python manage.py createsuperuser
-   ```
-
-2. **Set Up Academic Year**
-   - Login to admin panel
-   - Create current academic year
-   - Create terms
-
-3. **Add Initial Data**
-   - Add subjects
-   - Create classes
-   - Add teachers
-   - Add students
-
-4. **Configure Email**
-   - Test email sending
-   - Set up email templates
-
-5. **Set Up Backups**
-   - Database backups (daily)
-   - Media files backups (weekly)
-   - Use cron jobs or backup service
-
-6. **Monitor Application**
-   - Set up error tracking (Sentry)
-   - Monitor server resources
-   - Check logs regularly
-
----
-
-## 📊 MONITORING & MAINTENANCE
-
-### Daily Tasks
-- Check error logs
-- Monitor server resources
-- Verify backups completed
-
-### Weekly Tasks
-- Review user activity
-- Check database size
-- Update dependencies (if needed)
-
-### Monthly Tasks
-- Security updates
-- Performance optimization
-- Database cleanup
-- Backup verification
-
----
-
-## 🆘 TROUBLESHOOTING
-
-### Static Files Not Loading
-```bash
-python manage.py collectstatic --noinput
-# Check STATIC_ROOT and STATIC_URL settings
-```
-
-### Database Connection Error
-```bash
-# Check DATABASE_URL format
-# Verify database credentials
-# Ensure database server is running
-```
-
-### 502 Bad Gateway
-```bash
-# Check if Gunicorn is running
-sudo supervisorctl status schoolsystem
-# Check Gunicorn logs
-tail -f /home/schoolsystem/logs/gunicorn.log
-```
-
-### Permission Errors
-```bash
-# Fix file permissions
-sudo chown -R schoolsystem:schoolsystem /home/schoolsystem/
-chmod -R 755 /home/schoolsystem/KENYAN-SCHOOLS-ADMINISTRATION-SYSTEM
-```
-
----
-
-## 📞 SUPPORT
-
-For deployment issues:
-1. Check logs: `logs/django.log`
-2. Check server logs: `/var/log/nginx/error.log`
-3. Check application logs: Gunicorn/Supervisor logs
-4. Review Django documentation
-5. Check Railway/Heroku documentation
-
----
-
-## ✅ DEPLOYMENT CHECKLIST
-
-- [ ] Code pushed to repository
-- [ ] Environment variables set
-- [ ] Database created and configured
-- [ ] Migrations run successfully
-- [ ] Static files collected
-- [ ] Superuser created
-- [ ] Email configured and tested
-- [ ] SSL certificate installed
-- [ ] Backups configured
+2. **Railway Documentation:**
+   - [Railway Docs](https://docs.railway.app/)
+   - [Node.js Deployment Guide](https://docs.railway.app/deploy/deployments)
+
+3. **MongoDB Atlas Support:**
+   - [Atlas Documentation](https://docs.atlas.mongodb.com/)
+   - [Connection Troubleshooting](https://docs.atlas.mongodb.com/troubleshoot-connection/)
+
+## Alternative Deployment Platforms
+
+### Heroku
+1. Create Heroku app
+2. Set environment variables
+3. Deploy via Git or GitHub integration
+
+### Vercel
+1. Install Vercel CLI
+2. Configure `vercel.json`
+3. Deploy with `vercel --prod`
+
+### DigitalOcean App Platform
+1. Connect GitHub repository
+2. Configure environment variables
+3. Deploy through dashboard
+
+## Production Checklist
+
+- [ ] MongoDB database configured and accessible
+- [ ] Environment variables set securely
+- [ ] Default passwords changed
+- [ ] SSL/HTTPS enabled
+- [ ] Domain configured (if using custom domain)
 - [ ] Monitoring set up
-- [ ] Domain configured
-- [ ] Application accessible
-- [ ] All features tested
+- [ ] Backup strategy implemented
+- [ ] Error logging configured
+- [ ] Performance monitoring enabled
+- [ ] Security headers configured
+- [ ] Rate limiting tested
+- [ ] User permissions verified
+
+## Support
+
+For deployment support:
+- Check the main README.md for general setup
+- Review Railway documentation
+- Contact the development team for specific issues
 
 ---
 
-**Your system is now ready for production! 🎉**
+**Note:** Always test your deployment in a staging environment before going live with production data.

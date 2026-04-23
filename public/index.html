@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glotech High School - Administration System</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <style>
+        /* Glassmorphism styles */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #5a6fd8, #6a4190);
+        }
+        
+        /* Loading animation */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="glass p-8 rounded-lg text-center">
+            <div class="spinner mx-auto mb-4"></div>
+            <p class="text-white">Loading Glotech School System...</p>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 z-40 transition-transform">
+            <div class="p-6">
+                <!-- Logo -->
+                <div class="flex items-center mb-8">
+                    <img src="/images/logo.png" alt="Glotech High School" class="w-12 h-12 rounded-full mr-3">
+                    <div>
+                        <h1 class="text-white font-bold text-lg">Glotech High</h1>
+                        <p class="text-gray-300 text-sm">School System</p>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <nav id="navigation">
+                    <!-- Navigation will be populated by JavaScript -->
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 min-h-screen">
+            <!-- Top Bar -->
+            <header class="glass-dark p-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <button id="sidebar-toggle" class="text-white mr-4 md:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 id="page-title" class="text-white text-xl font-semibold">Dashboard</h2>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <button id="notifications-btn" class="text-white hover:text-gray-300">
+                            <i class="fas fa-bell"></i>
+                            <span id="notification-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                        </button>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="relative">
+                        <button id="user-menu-btn" class="flex items-center text-white hover:text-gray-300">
+                            <img id="user-avatar" src="/images/default-avatar.png" alt="User" class="w-8 h-8 rounded-full mr-2">
+                            <span id="user-name">User</span>
+                            <i class="fas fa-chevron-down ml-2"></i>
+                        </button>
+                        
+                        <div id="user-menu" class="absolute right-0 mt-2 w-48 glass rounded-lg shadow-lg hidden">
+                            <a href="#" class="block px-4 py-2 text-white hover:bg-white hover:bg-opacity-10">
+                                <i class="fas fa-user mr-2"></i> Profile
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-white hover:bg-white hover:bg-opacity-10">
+                                <i class="fas fa-cog mr-2"></i> Settings
+                            </a>
+                            <hr class="border-gray-600 my-2">
+                            <a href="#" id="logout-btn" class="block px-4 py-2 text-white hover:bg-white hover:bg-opacity-10">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div id="page-content" class="p-6">
+                <!-- Content will be loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="glass p-8 rounded-lg w-full max-w-md">
+            <div class="text-center mb-6">
+                <img src="/images/logo.png" alt="Glotech High School" class="w-16 h-16 rounded-full mx-auto mb-4">
+                <h2 class="text-white text-2xl font-bold">Welcome Back</h2>
+                <p class="text-gray-300">Sign in to your account</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="mb-4">
+                    <label class="block text-white text-sm font-medium mb-2">Username or Email</label>
+                    <input type="text" id="username" name="username" required
+                           class="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Enter your username or email">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-white text-sm font-medium mb-2">Password</label>
+                    <input type="password" id="password" name="password" required
+                           class="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" class="w-full btn-primary py-2 px-4 rounded-lg font-medium transition-all">
+                    Sign In
+                </button>
+            </form>
+            
+            <div id="login-error" class="mt-4 p-3 bg-red-500 bg-opacity-20 border border-red-500 rounded-lg text-red-200 hidden">
+                <!-- Error message will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50">
+        <!-- Toasts will be added here -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/app.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/utils.js"></script>
+</body>
+</html>
