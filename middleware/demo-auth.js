@@ -10,33 +10,11 @@ const demoUsers = {
     role: 'admin',
     fullName: 'System Administrator',
     isActive: true
-  },
-  'john.teacher': {
-    _id: 'demo-teacher-id',
-    username: 'john.teacher',
-    email: 'john.teacher@glotechhigh.ac.ke',
-    firstName: 'John',
-    lastName: 'Kamau',
-    role: 'teacher',
-    fullName: 'John Kamau',
-    isActive: true
-  },
-  'jane.student': {
-    _id: 'demo-student-id',
-    username: 'jane.student',
-    email: 'jane.student@glotechhigh.ac.ke',
-    firstName: 'Jane',
-    lastName: 'Wanjiku',
-    role: 'student',
-    fullName: 'Jane Wanjiku',
-    isActive: true
   }
 };
 
 const demoPasswords = {
-  admin: 'admin123',
-  'john.teacher': 'teacher123',
-  'jane.student': 'student123'
+  admin: 'admin123'
 };
 
 const demoAuth = async (req, res, next) => {

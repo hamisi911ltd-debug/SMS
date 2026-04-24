@@ -38,36 +38,36 @@
         }
         
         .glass-dark {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(15, 76, 117, 0.3);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(50, 130, 184, 0.2);
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 50%, #0f4c75 100%);
             min-height: 100vh;
         }
         
         .sidebar {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(15, 76, 117, 0.4);
             backdrop-filter: blur(15px);
         }
         
         .card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(50, 130, 184, 0.15);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(50, 130, 184, 0.3);
             border-radius: 16px;
         }
         
         .btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #0f4c75, #3282b8);
             border: none;
             color: white;
         }
         
         .btn-primary:hover {
-            background: linear-gradient(45deg, #5a6fd8, #6a4190);
+            background: linear-gradient(45deg, #0a3d5c, #2a6b96);
         }
         
         /* Loading animation */
@@ -77,8 +77,8 @@
         }
         
         .spinner {
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #3498db;
+            border: 2px solid rgba(50, 130, 184, 0.3);
+            border-top: 2px solid #3282b8;
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -217,36 +217,22 @@
                 </div>
                 
                 <!-- Demo Credentials -->
-                <div class="mb-6 p-4 bg-blue-500 bg-opacity-20 border border-blue-400 border-opacity-30 rounded-lg">
+                <div class="mb-6 p-4 bg-blue-600 bg-opacity-20 border border-blue-400 border-opacity-40 rounded-lg">
                     <h4 class="text-blue-200 text-sm font-semibold mb-3 flex items-center">
                         <i class="fas fa-info-circle mr-2"></i>
-                        Demo Credentials
+                        Demo Login
                     </h4>
                     <div class="space-y-2 text-xs">
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-300">👨‍💼 Admin:</span>
+                            <span class="text-gray-300">👨‍💼 Administrator:</span>
                             <button type="button" onclick="fillLogin('admin', 'admin123')" 
                                     class="text-blue-300 hover:text-blue-200 underline">
                                 admin / admin123
                             </button>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-300">👨‍🏫 Teacher:</span>
-                            <button type="button" onclick="fillLogin('john.teacher', 'teacher123')" 
-                                    class="text-blue-300 hover:text-blue-200 underline">
-                                john.teacher / teacher123
-                            </button>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-300">👨‍🎓 Student:</span>
-                            <button type="button" onclick="fillLogin('jane.student', 'student123')" 
-                                    class="text-blue-300 hover:text-blue-200 underline">
-                                jane.student / student123
-                            </button>
-                        </div>
                     </div>
                     <p class="text-gray-400 text-xs mt-2 italic">
-                        Click any credential above to auto-fill the form
+                        Click the credential above to auto-fill the form
                     </p>
                 </div>
                 

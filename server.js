@@ -133,7 +133,7 @@ if (mongoUri && mongoUri !== '' && mongoUri !== 'undefined') {
 } else {
   console.log('⚠️  No valid MONGODB_URI provided - starting in DEMO MODE');
   console.log('📖 See DEPLOYMENT_GUIDE.md for database setup instructions.');
-  console.log('🎭 Demo credentials: admin/admin123, john.teacher/teacher123, jane.student/student123');
+  console.log('🎭 Demo credentials: admin/admin123 (Administrator access only)');
   setupRoutes();
 }
 

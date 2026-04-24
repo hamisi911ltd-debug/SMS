@@ -153,9 +153,7 @@ router.get('/debug', async (req, res) => {
       message: 'Demo authentication is active',
       availableUsers: Object.keys(demoUsers),
       sampleCredentials: {
-        admin: 'admin/admin123',
-        teacher: 'john.teacher/teacher123',
-        student: 'jane.student/student123'
+        admin: 'admin/admin123'
       }
     });
   } catch (error) {
