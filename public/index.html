@@ -142,6 +142,10 @@
                         <i class="fas fa-bars"></i>
                     </button>
                     <h2 id="page-title" class="text-white text-xl font-semibold">Dashboard</h2>
+                    <div class="ml-4 inline-flex items-center px-2 py-1 bg-yellow-500 bg-opacity-20 border border-yellow-400 border-opacity-30 rounded-full">
+                        <i class="fas fa-flask text-yellow-300 text-xs mr-1"></i>
+                        <span class="text-yellow-200 text-xs font-medium">DEMO</span>
+                    </div>
                 </div>
                 
                 <div class="flex items-center space-x-4">
@@ -191,6 +195,10 @@
                 <img src="/images/logo.png" alt="Glotech High School" class="w-16 h-16 rounded-full mx-auto mb-4">
                 <h2 class="text-white text-2xl font-bold">Welcome Back</h2>
                 <p class="text-gray-300">Sign in to your account</p>
+                <div class="mt-2 inline-flex items-center px-3 py-1 bg-yellow-500 bg-opacity-20 border border-yellow-400 border-opacity-30 rounded-full">
+                    <i class="fas fa-flask text-yellow-300 text-xs mr-2"></i>
+                    <span class="text-yellow-200 text-xs font-medium">DEMO MODE</span>
+                </div>
             </div>
             
             <form id="login-form">
@@ -206,6 +214,40 @@
                     <input type="password" id="password" name="password" required
                            class="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                            placeholder="Enter your password">
+                </div>
+                
+                <!-- Demo Credentials -->
+                <div class="mb-6 p-4 bg-blue-500 bg-opacity-20 border border-blue-400 border-opacity-30 rounded-lg">
+                    <h4 class="text-blue-200 text-sm font-semibold mb-3 flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Demo Credentials
+                    </h4>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">👨‍💼 Admin:</span>
+                            <button type="button" onclick="fillLogin('admin', 'admin123')" 
+                                    class="text-blue-300 hover:text-blue-200 underline">
+                                admin / admin123
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">👨‍🏫 Teacher:</span>
+                            <button type="button" onclick="fillLogin('john.teacher', 'teacher123')" 
+                                    class="text-blue-300 hover:text-blue-200 underline">
+                                john.teacher / teacher123
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">👨‍🎓 Student:</span>
+                            <button type="button" onclick="fillLogin('jane.student', 'student123')" 
+                                    class="text-blue-300 hover:text-blue-200 underline">
+                                jane.student / student123
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs mt-2 italic">
+                        Click any credential above to auto-fill the form
+                    </p>
                 </div>
                 
                 <button type="submit" class="w-full btn-primary py-2 px-4 rounded-lg font-medium transition-all">
@@ -225,6 +267,24 @@
     </div>
 
     <!-- Scripts -->
+    <script>
+        // Function to fill login form with demo credentials
+        function fillLogin(username, password) {
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+            
+            // Add visual feedback
+            const inputs = [document.getElementById('username'), document.getElementById('password')];
+            inputs.forEach(input => {
+                input.style.background = 'rgba(34, 197, 94, 0.2)';
+                input.style.borderColor = 'rgba(34, 197, 94, 0.5)';
+                setTimeout(() => {
+                    input.style.background = 'rgba(255, 255, 255, 0.2)';
+                    input.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                }, 1000);
+            });
+        }
+    </script>
     <script src="/js/app.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/dashboard.js"></script>
