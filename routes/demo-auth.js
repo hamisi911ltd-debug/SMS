@@ -11,6 +11,12 @@ router.post('/login', [
   body('password').notEmpty().withMessage('Password is required')
 ], async (req, res) => {
   try {
+    console.log('🔐 Demo login attempt:', {
+      username: req.body.username,
+      password: req.body.password ? '[PROVIDED]' : '[MISSING]',
+      timestamp: new Date().toISOString()
+    });
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -29,6 +35,7 @@ router.post('/login', [
       req.session.userId = result.user._id;
       req.session.userRole = result.user.role;
 
+      console.log('✅ Demo login successful for:', username);
       res.json({
         success: true,
         message: 'Login successful (Demo Mode)',
@@ -38,6 +45,7 @@ router.post('/login', [
         }
       });
     } else {
+      console.log('❌ Demo login failed for:', username, 'Reason:', result.message);
       res.status(401).json({
         success: false,
         message: result.message

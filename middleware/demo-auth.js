@@ -99,17 +99,18 @@ const demoAuthorize = (...roles) => {
 
 // Demo login function
 const demoLogin = (username, password) => {
-  console.log(`Demo login attempt: username="${username}", password="${password}"`);
-  console.log('Available users:', Object.keys(demoUsers));
-  console.log('Available passwords:', Object.keys(demoPasswords));
+  console.log(`🔍 Demo login attempt: username="${username}", password="${password}"`);
+  console.log('📋 Available users:', Object.keys(demoUsers));
+  console.log('🔑 Available passwords:', Object.keys(demoPasswords));
   
   const user = demoUsers[username];
   const correctPassword = demoPasswords[username];
   
-  console.log(`User found: ${!!user}, Password match: ${password === correctPassword}`);
+  console.log(`👤 User found: ${!!user}`);
+  console.log(`🔐 Password match: ${password === correctPassword} (expected: "${correctPassword}")`);
   
   if (user && password === correctPassword) {
-    console.log('Demo login successful for:', username);
+    console.log('✅ Demo login successful for:', username);
     return {
       success: true,
       user,
@@ -117,7 +118,7 @@ const demoLogin = (username, password) => {
     };
   }
   
-  console.log('Demo login failed for:', username);
+  console.log('❌ Demo login failed for:', username);
   return {
     success: false,
     message: 'Invalid login credentials'

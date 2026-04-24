@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a1a; color: white; }
+        input, button { padding: 10px; margin: 5px; }
+        .result { margin-top: 20px; padding: 10px; background: #333; }
+    </style>
+</head>
+<body>
+    <h1>Login Test</h1>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" value="admin">
+        <input type="password" id="password" placeholder="Password" value="admin123">
+        <button type="submit">Test Login</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = 
+                    `<pre>Status: ${response.status}\n${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        });
+    </script>
+</body>
+</html>

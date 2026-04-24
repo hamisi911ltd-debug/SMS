@@ -597,12 +597,17 @@ class GlotechApp {
             const response = await fetch(`${this.apiBase}${endpoint}`, config);
             
             // Handle different response types
-            if (response.status === 401 && !endpoint.includes('/auth/login')) {
-                // Unauthorized - clear token and show login (but not for login attempts)
-                localStorage.removeItem('token');
-                this.currentUser = null;
-                this.showLogin();
-                throw new Error('Authentication required');
+            if (response.status === 401) {
+                if (endpoint.includes('/auth/login')) {
+                    // Login failed - let the login handler deal with it
+                    // Don't throw here, just continue to parse the response
+                } else {
+                    // Unauthorized for other endpoints - clear token and show login
+                    localStorage.removeItem('token');
+                    this.currentUser = null;
+                    this.showLogin();
+                    throw new Error('Authentication required');
+                }
             }
             
             if (response.status === 502) {
@@ -618,6 +623,19 @@ class GlotechApp {
                 } catch {
                     errorMessage = `HTTP ${response.status}: ${response.statusText}`;
                 }
+                
+                // For login endpoints, return the parsed response instead of throwing
+                if (endpoint.includes('/auth/login') && response.status === 401) {
+                    try {
+                        return JSON.parse(errorText);
+                    } catch {
+                        return {
+                            success: false,
+                            message: errorMessage
+                        };
+                    }
+                }
+                
                 throw new Error(errorMessage);
             }
             
