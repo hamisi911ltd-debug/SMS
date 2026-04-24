@@ -79,20 +79,26 @@ const setupRoutes = () => {
     app.use('/api/auth', require('./routes/demo-auth'));
     app.use('/api/dashboard', require('./routes/demo-dashboard'));
     app.use('/api/notifications', require('./routes/demo-notifications'));
-    console.log('📡 Using demo authentication, dashboard, and notification routes');
+    app.use('/api/students', require('./routes/demo-students'));
+    app.use('/api/teachers', require('./routes/demo-teachers'));
+    app.use('/api/academics', require('./routes/demo-academics'));
+    app.use('/api/finance', require('./routes/demo-finance'));
+    app.use('/api/attendance', require('./routes/demo-attendance'));
+    app.use('/api/messaging', require('./routes/demo-messaging'));
+    app.use('/api/reports', require('./routes/demo-reports'));
+    console.log('📡 Using demo routes for all modules');
   } else {
     app.use('/api/auth', require('./routes/auth'));
     app.use('/api/dashboard', require('./routes/dashboard'));
-    console.log('📡 Using database authentication and dashboard routes');
+    app.use('/api/students', require('./routes/students'));
+    app.use('/api/teachers', require('./routes/teachers'));
+    app.use('/api/academics', require('./routes/academics'));
+    app.use('/api/finance', require('./routes/finance'));
+    app.use('/api/attendance', require('./routes/attendance'));
+    app.use('/api/messaging', require('./routes/messaging'));
+    app.use('/api/reports', require('./routes/reports'));
+    console.log('📡 Using database routes for all modules');
   }
-
-  app.use('/api/students', require('./routes/students'));
-  app.use('/api/teachers', require('./routes/teachers'));
-  app.use('/api/academics', require('./routes/academics'));
-  app.use('/api/finance', require('./routes/finance'));
-  app.use('/api/attendance', require('./routes/attendance'));
-  app.use('/api/messaging', require('./routes/messaging'));
-  app.use('/api/reports', require('./routes/reports'));
 };
 
 if (mongoUri && mongoUri !== '' && mongoUri !== 'undefined') {
