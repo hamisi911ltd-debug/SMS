@@ -77,10 +77,13 @@ const setupRoutes = () => {
   // Routes - conditionally use demo routes if no database
   if (isDemoMode) {
     app.use('/api/auth', require('./routes/demo-auth'));
-    console.log('📡 Using demo authentication routes');
+    app.use('/api/dashboard', require('./routes/demo-dashboard'));
+    app.use('/api/notifications', require('./routes/demo-notifications'));
+    console.log('📡 Using demo authentication, dashboard, and notification routes');
   } else {
     app.use('/api/auth', require('./routes/auth'));
-    console.log('📡 Using database authentication routes');
+    app.use('/api/dashboard', require('./routes/dashboard'));
+    console.log('📡 Using database authentication and dashboard routes');
   }
 
   app.use('/api/students', require('./routes/students'));
@@ -89,7 +92,6 @@ const setupRoutes = () => {
   app.use('/api/finance', require('./routes/finance'));
   app.use('/api/attendance', require('./routes/attendance'));
   app.use('/api/messaging', require('./routes/messaging'));
-  app.use('/api/dashboard', require('./routes/dashboard'));
   app.use('/api/reports', require('./routes/reports'));
 };
 
